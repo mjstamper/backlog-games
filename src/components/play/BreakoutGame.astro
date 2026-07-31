@@ -1,0 +1,12 @@
+<div id="breakout-mount" class="w-full"></div>
+
+<script>
+  import { initBreakout } from '../../scripts/breakout';
+
+  const mount = document.getElementById('breakout-mount');
+  if (!mount) throw new Error('Breakout mount element not found');
+
+  const destroy = initBreakout(mount);
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>

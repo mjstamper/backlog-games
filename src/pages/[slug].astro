@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import GamePlayerShell from '../components/GamePlayerShell.astro';
 import ComingSoonStage from '../components/ComingSoonStage.astro';
 import SnakeGame from '../components/play/SnakeGame.astro';
+import BreakoutGame from '../components/play/BreakoutGame.astro';
 import { games, siteConfig } from '../config/site';
 
 export function getStaticPaths() {
@@ -24,6 +25,8 @@ const isPlayable = game.status === 'playable';
     {
       game.slug === 'snake' && isPlayable ? (
         <SnakeGame />
+      ) : game.slug === 'breakout' && isPlayable ? (
+        <BreakoutGame />
       ) : isPlayable ? (
         <div class="flex min-h-[420px] items-center justify-center text-games-ink-muted">
           Game loads here.

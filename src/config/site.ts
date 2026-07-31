@@ -45,9 +45,9 @@ export const games: Game[] = [
     description:
       'Bounce the ball off your paddle and smash through every brick to clear the board.',
     category: 'arcade',
-    status: 'coming-soon',
+    status: 'playable',
     thumbnail: '/thumbnails/breakout.svg',
-    tags: ['classic', 'paddle', 'arcade'],
+    tags: ['classic', 'paddle', 'high-score'],
   },
   {
     slug: 'memory',
