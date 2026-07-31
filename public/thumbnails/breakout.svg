@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Breakout">
+  <rect width="320" height="200" fill="#0f1419" />
+  <g>
+    <rect x="40" y="30" width="44" height="16" rx="3" fill="#7ee787" />
+    <rect x="92" y="30" width="44" height="16" rx="3" fill="#5fb0d1" />
+    <rect x="144" y="30" width="44" height="16" rx="3" fill="#e8c15d" />
+    <rect x="196" y="30" width="44" height="16" rx="3" fill="#e85d8a" />
+    <rect x="66" y="54" width="44" height="16" rx="3" fill="#5fb0d1" />
+    <rect x="118" y="54" width="44" height="16" rx="3" fill="#e8c15d" />
+    <rect x="170" y="54" width="44" height="16" rx="3" fill="#7ee787" />
+  </g>
+  <circle cx="160" cy="120" r="8" fill="#f4f1ea" />
+  <rect x="124" y="165" width="72" height="12" rx="6" fill="#7ee787" />
+</svg>

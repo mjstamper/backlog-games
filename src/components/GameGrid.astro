@@ -1,0 +1,17 @@
+---
+import type { Game } from '../config/site';
+import GameCard from './GameCard.astro';
+
+interface Props {
+  games: Game[];
+}
+
+const { games } = Astro.props;
+---
+
+<ul
+  id="game-grid"
+  class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+>
+  {games.map((game) => <GameCard game={game} />)}
+</ul>

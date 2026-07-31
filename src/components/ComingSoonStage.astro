@@ -1,0 +1,25 @@
+---
+import type { Game } from '../config/site';
+
+interface Props {
+  game: Game;
+}
+
+const { game } = Astro.props;
+---
+
+<div
+  class="flex h-full min-h-[420px] flex-col items-center justify-center gap-4 p-8 text-center"
+>
+  <span class="font-arcade text-xs text-games-accent">In development</span>
+  <p class="max-w-md text-games-ink-muted">
+    {game.title} is being built. Check back soon to play it right here in your
+    browser.
+  </p>
+  <a
+    href="/"
+    class="rounded-full border border-games-border px-5 py-2 text-sm font-semibold text-games-ink transition-colors hover:border-games-accent hover:text-games-accent"
+  >
+    Browse other games
+  </a>
+</div>

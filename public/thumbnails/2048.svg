@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="2048">
+  <rect width="320" height="200" fill="#0f1419" />
+  <g font-family="monospace" font-weight="bold" text-anchor="middle">
+    <rect x="96" y="36" width="58" height="58" rx="6" fill="#19212b" />
+    <text x="125" y="74" font-size="20" fill="#9aa6b3">2</text>
+    <rect x="160" y="36" width="58" height="58" rx="6" fill="#2b3543" />
+    <text x="189" y="74" font-size="20" fill="#f4f1ea">4</text>
+    <rect x="96" y="100" width="58" height="58" rx="6" fill="#5fb0d1" />
+    <text x="125" y="138" font-size="18" fill="#0f1419">128</text>
+    <rect x="160" y="100" width="58" height="58" rx="6" fill="#7ee787" />
+    <text x="189" y="136" font-size="15" fill="#0f1419">2048</text>
+  </g>
+</svg>

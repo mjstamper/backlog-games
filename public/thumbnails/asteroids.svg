@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Asteroids">
+  <rect width="320" height="200" fill="#0f1419" />
+  <g fill="#f4f1ea">
+    <circle cx="50" cy="40" r="1.5" />
+    <circle cx="120" cy="30" r="1.5" />
+    <circle cx="260" cy="50" r="1.5" />
+    <circle cx="300" cy="150" r="1.5" />
+    <circle cx="30" cy="160" r="1.5" />
+  </g>
+  <polygon points="150,80 170,120 150,110 130,120" fill="none" stroke="#7ee787" stroke-width="3" stroke-linejoin="round" />
+  <polygon points="230,55 250,50 262,66 256,86 236,90 224,72" fill="none" stroke="#9aa6b3" stroke-width="2.5" stroke-linejoin="round" />
+  <polygon points="70,120 88,116 98,130 90,146 72,148 62,134" fill="none" stroke="#9aa6b3" stroke-width="2.5" stroke-linejoin="round" />
+  <line x1="150" y1="80" x2="150" y2="40" stroke="#e85d5d" stroke-width="2" stroke-dasharray="4 4" />
+</svg>

@@ -1,0 +1,26 @@
+---
+import { siteConfig } from '../config/site';
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-games-border bg-games-canvas/90 backdrop-blur-md"
+>
+  <div
+    class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6"
+  >
+    <a
+      href="/"
+      class="flex items-center gap-2 text-games-accent transition-colors hover:text-games-accent-hover"
+    >
+      <span class="font-arcade text-xs sm:text-sm">{siteConfig.name}</span>
+    </a>
+    <nav aria-label="Games" class="flex items-center gap-5">
+      <a
+        href="/"
+        class="text-sm font-medium text-games-ink-muted transition-colors hover:text-games-ink"
+      >
+        All games
+      </a>
+    </nav>
+  </div>
+</header>

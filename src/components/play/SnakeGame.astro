@@ -1,0 +1,12 @@
+<div id="snake-mount" class="w-full"></div>
+
+<script>
+  import { initSnake } from '../../scripts/snake';
+
+  const mount = document.getElementById('snake-mount');
+  if (!mount) throw new Error('Snake mount element not found');
+
+  const destroy = initSnake(mount);
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>

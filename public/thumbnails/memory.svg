@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Memory Match">
+  <rect width="320" height="200" fill="#0f1419" />
+  <g>
+    <rect x="70" y="40" width="50" height="50" rx="6" fill="#19212b" stroke="#7ee787" stroke-width="2" />
+    <text x="95" y="74" font-family="monospace" font-size="28" fill="#7ee787" text-anchor="middle">?</text>
+    <rect x="135" y="40" width="50" height="50" rx="6" fill="#7ee787" />
+    <circle cx="160" cy="65" r="13" fill="#0f1419" />
+    <rect x="200" y="40" width="50" height="50" rx="6" fill="#19212b" stroke="#5fb0d1" stroke-width="2" />
+    <text x="225" y="74" font-family="monospace" font-size="28" fill="#5fb0d1" text-anchor="middle">?</text>
+    <rect x="70" y="105" width="50" height="50" rx="6" fill="#19212b" stroke="#e8c15d" stroke-width="2" />
+    <text x="95" y="139" font-family="monospace" font-size="28" fill="#e8c15d" text-anchor="middle">?</text>
+    <rect x="135" y="105" width="50" height="50" rx="6" fill="#19212b" stroke="#7ee787" stroke-width="2" />
+    <text x="160" y="139" font-family="monospace" font-size="28" fill="#7ee787" text-anchor="middle">?</text>
+    <rect x="200" y="105" width="50" height="50" rx="6" fill="#e85d8a" />
+    <circle cx="225" cy="130" r="13" fill="#0f1419" />
+  </g>
+</svg>

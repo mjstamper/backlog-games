@@ -1,0 +1,44 @@
+---
+import { categories } from '../config/site';
+
+const filters = [{ id: 'all', label: 'All' }, ...categories];
+---
+
+<div
+  class="flex flex-wrap gap-2"
+  role="group"
+  aria-label="Filter games by category"
+>
+  {
+    filters.map((filter, index) => (
+      <button
+        type="button"
+        class="category-filter rounded-full border border-games-border px-4 py-1.5 text-sm font-medium text-games-ink-muted transition-colors hover:border-games-accent hover:text-games-ink aria-pressed:border-games-accent aria-pressed:bg-games-accent aria-pressed:text-games-canvas"
+        data-category={filter.id}
+        aria-pressed={index === 0 ? 'true' : 'false'}
+      >
+        {filter.label}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.category-filter');
+  const cards = document.querySelectorAll<HTMLElement>('.game-card');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const selected = button.dataset.category;
+
+      buttons.forEach((other) =>
+        other.setAttribute('aria-pressed', String(other === button)),
+      );
+
+      cards.forEach((card) => {
+        const show = selected === 'all' || card.dataset.category === selected;
+        card.style.display = show ? '' : 'none';
+      });
+    });
+  });
+</script>
