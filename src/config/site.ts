@@ -55,7 +55,7 @@ export const games: Game[] = [
     description:
       'Flip the cards two at a time and match every pair before the clock gets the better of you.',
     category: 'puzzle',
-    status: 'coming-soon',
+    status: 'playable',
     thumbnail: '/thumbnails/memory.svg',
     tags: ['cards', 'memory', 'timer'],
   },
@@ -65,7 +65,7 @@ export const games: Game[] = [
     description:
       'Slide and merge matching tiles to reach the elusive 2048 tile, and then keep going.',
     category: 'puzzle',
-    status: 'coming-soon',
+    status: 'playable',
     thumbnail: '/thumbnails/2048.svg',
     tags: ['numbers', 'grid', 'strategy'],
   },
@@ -75,7 +75,7 @@ export const games: Game[] = [
     description:
       'Pilot your ship through a field of drifting rocks and blast them apart before they hit you.',
     category: 'action',
-    status: 'coming-soon',
+    status: 'playable',
     thumbnail: '/thumbnails/asteroids.svg',
     tags: ['space', 'shooter', 'physics'],
   },

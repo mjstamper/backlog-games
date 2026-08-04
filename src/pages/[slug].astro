@@ -4,6 +4,9 @@ import GamePlayerShell from '../components/GamePlayerShell.astro';
 import ComingSoonStage from '../components/ComingSoonStage.astro';
 import SnakeGame from '../components/play/SnakeGame.astro';
 import BreakoutGame from '../components/play/BreakoutGame.astro';
+import MemoryGame from '../components/play/MemoryGame.astro';
+import Game2048 from '../components/play/Game2048.astro';
+import AsteroidsGame from '../components/play/AsteroidsGame.astro';
 import { games, siteConfig } from '../config/site';
 
 export function getStaticPaths() {
@@ -27,6 +30,12 @@ const isPlayable = game.status === 'playable';
         <SnakeGame />
       ) : game.slug === 'breakout' && isPlayable ? (
         <BreakoutGame />
+      ) : game.slug === 'memory' && isPlayable ? (
+        <MemoryGame />
+      ) : game.slug === '2048' && isPlayable ? (
+        <Game2048 />
+      ) : game.slug === 'asteroids' && isPlayable ? (
+        <AsteroidsGame />
       ) : isPlayable ? (
         <div class="flex min-h-[420px] items-center justify-center text-games-ink-muted">
           Game loads here.

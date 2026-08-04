@@ -1,0 +1,12 @@
+<div id="memory-mount" class="w-full"></div>
+
+<script>
+  import { initMemory } from '../../scripts/memory';
+
+  const mount = document.getElementById('memory-mount');
+  if (!mount) throw new Error('Memory mount element not found');
+
+  const destroy = initMemory(mount);
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>

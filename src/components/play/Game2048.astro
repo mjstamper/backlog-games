@@ -1,0 +1,12 @@
+<div id="game2048-mount" class="w-full"></div>
+
+<script>
+  import { init2048 } from '../../scripts/game2048';
+
+  const mount = document.getElementById('game2048-mount');
+  if (!mount) throw new Error('2048 mount element not found');
+
+  const destroy = init2048(mount);
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>
