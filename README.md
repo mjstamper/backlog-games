@@ -11,10 +11,10 @@ The catalog lives in [src/config/site.ts](src/config/site.ts). Each entry is a `
 | Game | Category | Status |
 |------|----------|--------|
 | Snake | Arcade | Playable |
-| Breakout | Arcade | Coming soon |
-| Memory Match | Puzzle | Coming soon |
-| 2048 | Puzzle | Coming soon |
-| Asteroids | Action | Coming soon |
+| Breakout | Arcade | Playable |
+| Memory Match | Puzzle | Playable |
+| 2048 | Puzzle | Playable |
+| Asteroids | Action | Playable |
 
 ### Adding a game
 
