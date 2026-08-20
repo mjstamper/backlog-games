@@ -1,0 +1,44 @@
+---
+import { siteConfig } from '../config/site';
+---
+
+<section
+  class="relative mb-10 overflow-hidden rounded-3xl border border-games-border"
+  aria-labelledby="hero-heading"
+>
+  <img
+    src="/arcade-hero.png"
+    alt=""
+    class="absolute inset-0 h-full w-full object-cover"
+    aria-hidden="true"
+  />
+  <div
+    class="absolute inset-0 bg-gradient-to-r from-[#142929]/95 via-[#142929]/80 to-[#142929]/40"
+  >
+  </div>
+  <div
+    class="absolute inset-0 bg-gradient-to-t from-[#142929]/90 via-transparent to-[#142929]/30"
+  >
+  </div>
+
+  <div class="relative px-6 py-12 sm:px-10 sm:py-16">
+    <p class="font-arcade text-[10px] tracking-widest text-[#f2ea4a] sm:text-xs">
+      Free to play
+    </p>
+    <h1
+      id="hero-heading"
+      class="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-games-ink sm:text-5xl"
+    >
+      {siteConfig.name}
+    </h1>
+    <p class="mt-3 max-w-xl text-lg text-games-ink-muted">
+      {siteConfig.tagline}
+    </p>
+    <a
+      href="#all-games"
+      class="mt-6 inline-flex rounded-full bg-[#f2ea4a] px-6 py-2.5 text-sm font-semibold text-[#142929] transition-colors hover:bg-[#ffe566]"
+    >
+      Browse the arcade
+    </a>
+  </div>
+</section>
