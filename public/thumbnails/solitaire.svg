@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Solitaire">
+  <rect width="320" height="200" fill="#0f1419" />
+  <rect x="40" y="28" width="44" height="60" rx="6" fill="#19212b" stroke="#7ee787" stroke-width="2" />
+  <text x="62" y="65" font-family="monospace" font-size="18" fill="#7ee787" text-anchor="middle">BG</text>
+  <rect x="92" y="28" width="44" height="60" rx="6" fill="#19212b" stroke="#5db8e8" stroke-width="2" />
+  <text x="114" y="58" font-family="monospace" font-size="16" fill="#e85d5d" text-anchor="middle">K</text>
+  <text x="114" y="76" font-family="monospace" font-size="18" fill="#e85d5d" text-anchor="middle">&#9829;</text>
+  <rect x="200" y="28" width="44" height="60" rx="6" fill="#19212b" stroke="#e8c15d" stroke-width="2" />
+  <text x="222" y="58" font-family="monospace" font-size="16" fill="#f4f1ea" text-anchor="middle">A</text>
+  <text x="222" y="76" font-family="monospace" font-size="18" fill="#f4f1ea" text-anchor="middle">&#9824;</text>
+  <rect x="252" y="28" width="44" height="60" rx="6" fill="#19212b" stroke="#e8c15d" stroke-width="1" stroke-dasharray="4 3" />
+  <g>
+    <rect x="24" y="110" width="36" height="50" rx="5" fill="#19212b" stroke="#7ee787" stroke-width="1.5" />
+    <rect x="24" y="122" width="36" height="50" rx="5" fill="#222c38" stroke="#7ee787" stroke-width="1.5" />
+    <text x="42" y="152" font-family="monospace" font-size="14" fill="#7ee787" text-anchor="middle">7</text>
+    <rect x="68" y="110" width="36" height="50" rx="5" fill="#19212b" stroke="#5db8e8" stroke-width="1.5" />
+    <rect x="68" y="122" width="36" height="50" rx="5" fill="#222c38" stroke="#5db8e8" stroke-width="1.5" />
+    <rect x="68" y="134" width="36" height="50" rx="5" fill="#19212b" stroke="#e85d5d" stroke-width="1.5" />
+    <text x="86" y="164" font-family="monospace" font-size="14" fill="#e85d5d" text-anchor="middle">Q</text>
+    <rect x="112" y="110" width="36" height="50" rx="5" fill="#19212b" stroke="#7ee787" stroke-width="1.5" />
+    <rect x="156" y="110" width="36" height="50" rx="5" fill="#19212b" stroke="#5db8e8" stroke-width="1.5" />
+    <rect x="200" y="110" width="36" height="50" rx="5" fill="#19212b" stroke="#e85d5d" stroke-width="1.5" />
+    <rect x="244" y="110" width="36" height="50" rx="5" fill="#19212b" stroke="#7ee787" stroke-width="1.5" />
+  </g>
+</svg>

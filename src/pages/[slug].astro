@@ -7,6 +7,7 @@ import BreakoutGame from '../components/play/BreakoutGame.astro';
 import MemoryGame from '../components/play/MemoryGame.astro';
 import Game2048 from '../components/play/Game2048.astro';
 import AsteroidsGame from '../components/play/AsteroidsGame.astro';
+import SolitaireGame from '../components/play/SolitaireGame.astro';
 import { games, siteConfig } from '../config/site';
 
 export function getStaticPaths() {
@@ -36,6 +37,8 @@ const isPlayable = game.status === 'playable';
         <Game2048 />
       ) : game.slug === 'asteroids' && isPlayable ? (
         <AsteroidsGame />
+      ) : game.slug === 'solitaire' && isPlayable ? (
+        <SolitaireGame />
       ) : isPlayable ? (
         <div class="flex min-h-[420px] items-center justify-center text-games-ink-muted">
           Game loads here.

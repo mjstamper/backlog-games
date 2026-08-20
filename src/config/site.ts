@@ -79,6 +79,16 @@ export const games: Game[] = [
     thumbnail: '/thumbnails/asteroids.svg',
     tags: ['space', 'shooter', 'physics'],
   },
+  {
+    slug: 'solitaire',
+    title: 'Solitaire',
+    description:
+      'Classic Klondike solitaire. Build foundations from ace to king and clear the tableau.',
+    category: 'casual',
+    status: 'playable',
+    thumbnail: '/thumbnails/solitaire.svg',
+    tags: ['cards', 'classic', 'tap'],
+  },
 ];
 
 export function getGame(slug: string): Game | undefined {

@@ -1,0 +1,12 @@
+<div id="solitaire-mount" class="w-full"></div>
+
+<script>
+  import { initSolitaire } from '../../scripts/solitaire';
+
+  const mount = document.getElementById('solitaire-mount');
+  if (!mount) throw new Error('Solitaire mount element not found');
+
+  const destroy = initSolitaire(mount);
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>
