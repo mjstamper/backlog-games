@@ -53,8 +53,9 @@ export function initSnake(root: HTMLElement): () => void {
 
   root.append(hud, canvas, help);
 
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return () => undefined;
+  const context = canvas.getContext('2d');
+  if (!context) return () => undefined;
+  const ctx: CanvasRenderingContext2D = context;
 
   let cellSize = 24;
   let snake: Point[] = [];
