@@ -1,3 +1,5 @@
+import { bindPointerDrag } from './lib/touch';
+
 type GameState = 'ready' | 'playing' | 'paused' | 'gameover';
 
 const PLAY_WIDTH = 480;
@@ -65,7 +67,7 @@ export function initBreakout(root: HTMLElement): () => void {
 
   const statusEl = document.createElement('span');
   statusEl.className = 'text-games-accent';
-  statusEl.textContent = 'Press Space to launch';
+  statusEl.textContent = 'Tap or Space to launch';
 
   hud.append(scoreEl, highScoreEl, livesEl, statusEl);
 
@@ -76,7 +78,8 @@ export function initBreakout(root: HTMLElement): () => void {
 
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
-  help.textContent = 'Arrow keys or A/D to move. Space to launch. P to pause.';
+  help.textContent =
+    'Drag or A/D to move the paddle. Tap or Space to launch. P to pause.';
 
   root.append(hud, canvas, help);
 
@@ -160,13 +163,13 @@ export function initBreakout(root: HTMLElement): () => void {
   function setState(next: GameState) {
     state = next;
     if (state === 'ready') {
-      statusEl.textContent = 'Press Space to launch';
+      statusEl.textContent = 'Tap or Space to launch';
     } else if (state === 'playing') {
-      statusEl.textContent = launched ? 'Playing' : 'Press Space to launch';
+      statusEl.textContent = launched ? 'Playing' : 'Tap or Space to launch';
     } else if (state === 'paused') {
       statusEl.textContent = 'Paused';
     } else {
-      statusEl.textContent = won ? 'You win! — Space to replay' : 'Game over — Space to retry';
+      statusEl.textContent = won ? 'You win! — tap or Space to replay' : 'Game over — tap or Space to retry';
     }
     draw();
   }
@@ -190,7 +193,7 @@ export function initBreakout(root: HTMLElement): () => void {
       return;
     }
     resetBall();
-    statusEl.textContent = 'Life lost — Space to launch';
+    statusEl.textContent = 'Life lost — tap or Space to launch';
   }
 
   function currentSpeed() {
@@ -328,7 +331,7 @@ export function initBreakout(root: HTMLElement): () => void {
 
       const message =
         state === 'ready'
-          ? 'Press Space to play'
+          ? 'Tap or Space to play'
           : state === 'paused'
             ? 'Paused'
             : won
@@ -339,7 +342,7 @@ export function initBreakout(root: HTMLElement): () => void {
       ctx.fillStyle = COLORS.textMuted;
       ctx.font = '14px Inter, sans-serif';
       ctx.fillText(
-        state === 'gameover' ? `Score: ${score}` : 'Arrow keys or A/D',
+        state === 'gameover' ? `Score: ${score}` : 'Drag to move paddle',
         PLAY_WIDTH / 2,
         PLAY_HEIGHT / 2 + 14,
       );
@@ -400,23 +403,24 @@ export function initBreakout(root: HTMLElement): () => void {
     return ((clientX - rect.left) / rect.width) * PLAY_WIDTH;
   }
 
-  function onPointerMove(event: PointerEvent) {
-    if (state !== 'playing') return;
-    const x = pointerToPlayX(event.clientX);
+  function movePaddleToClientX(clientX: number) {
+    const x = pointerToPlayX(clientX);
     paddleX = Math.max(0, Math.min(PLAY_WIDTH - PADDLE_WIDTH, x - PADDLE_WIDTH / 2));
   }
 
-  function onPointerDown(event: PointerEvent) {
-    event.preventDefault();
-    onSpace();
-  }
+  const unbindPointer = bindPointerDrag(
+    canvas,
+    (clientX) => {
+      if (state !== 'playing') return;
+      movePaddleToClientX(clientX);
+    },
+    { onDown: onSpace },
+  );
 
   const resizeObserver = new ResizeObserver(resizeCanvas);
   resizeObserver.observe(root);
   window.addEventListener('keydown', onKeyDown);
   window.addEventListener('keyup', onKeyUp);
-  canvas.addEventListener('pointermove', onPointerMove);
-  canvas.addEventListener('pointerdown', onPointerDown);
 
   resetGame();
   setState('ready');
@@ -428,8 +432,7 @@ export function initBreakout(root: HTMLElement): () => void {
     resizeObserver.disconnect();
     window.removeEventListener('keydown', onKeyDown);
     window.removeEventListener('keyup', onKeyUp);
-    canvas.removeEventListener('pointermove', onPointerMove);
-    canvas.removeEventListener('pointerdown', onPointerDown);
+    unbindPointer();
     root.innerHTML = '';
   };
 }

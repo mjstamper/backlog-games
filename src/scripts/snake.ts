@@ -1,3 +1,5 @@
+import { bindTouchInput } from './lib/touch';
+
 type Point = { x: number; y: number };
 type Direction = Point;
 type GameState = 'ready' | 'playing' | 'paused' | 'gameover';
@@ -34,18 +36,20 @@ export function initSnake(root: HTMLElement): () => void {
 
   const statusEl = document.createElement('span');
   statusEl.className = 'text-games-accent';
-  statusEl.textContent = 'Press Space to start';
+  statusEl.textContent = 'Tap or Space to start';
 
   hud.append(scoreEl, highScoreEl, statusEl);
 
   const canvas = document.createElement('canvas');
-  canvas.className = 'w-full max-w-[576px] rounded-lg border border-games-border';
+  canvas.className =
+    'w-full max-w-[576px] touch-none rounded-lg border border-games-border';
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Snake game board');
 
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
-  help.textContent = 'Arrow keys or WASD to move. Space to start. P to pause.';
+  help.textContent =
+    'Arrow keys, WASD, or swipe to move. Tap or Space to start. P to pause.';
 
   root.append(hud, canvas, help);
 
@@ -61,7 +65,6 @@ export function initSnake(root: HTMLElement): () => void {
   let highScore = savedHigh;
   let state: GameState = 'ready';
   let tickTimer: ReturnType<typeof setInterval> | null = null;
-  let touchStart: Point | null = null;
 
   function resizeCanvas() {
     const width = Math.min(root.clientWidth - 32, GRID_COLS * 24);
@@ -103,7 +106,7 @@ export function initSnake(root: HTMLElement): () => void {
   function setState(next: GameState) {
     state = next;
     if (state === 'ready') {
-      statusEl.textContent = 'Press Space to start';
+      statusEl.textContent = 'Tap or Space to start';
       stopTick();
     } else if (state === 'playing') {
       statusEl.textContent = 'Playing';
@@ -112,7 +115,7 @@ export function initSnake(root: HTMLElement): () => void {
       statusEl.textContent = 'Paused';
       stopTick();
     } else {
-      statusEl.textContent = 'Game over — Space to retry';
+      statusEl.textContent = 'Game over — tap or Space to retry';
       stopTick();
     }
     draw();
@@ -225,7 +228,7 @@ export function initSnake(root: HTMLElement): () => void {
 
       const message =
         state === 'ready'
-          ? 'Press Space to play'
+          ? 'Tap or Space to play'
           : state === 'paused'
             ? 'Paused'
             : 'Game Over';
@@ -234,7 +237,7 @@ export function initSnake(root: HTMLElement): () => void {
       ctx.fillStyle = COLORS.textMuted;
       ctx.font = '13px Inter, sans-serif';
       ctx.fillText(
-        state === 'gameover' ? `Score: ${score}` : 'Arrow keys or WASD',
+        state === 'gameover' ? `Score: ${score}` : 'Swipe or use arrow keys',
         canvas.width / 2,
         canvas.height / 2 + 16,
       );
@@ -275,32 +278,29 @@ export function initSnake(root: HTMLElement): () => void {
     else if (key === 'arrowright' || key === 'd') queueDirection({ x: 1, y: 0 });
   }
 
-  function onTouchStart(event: TouchEvent) {
-    const touch = event.touches[0];
-    touchStart = { x: touch.clientX, y: touch.clientY };
-  }
-
-  function onTouchEnd(event: TouchEvent) {
-    if (!touchStart) return;
-    const touch = event.changedTouches[0];
-    const dx = touch.clientX - touchStart.x;
-    const dy = touch.clientY - touchStart.y;
-    touchStart = null;
-
-    if (Math.abs(dx) < 24 && Math.abs(dy) < 24) return;
-
-    if (Math.abs(dx) > Math.abs(dy)) {
-      queueDirection(dx > 0 ? { x: 1, y: 0 } : { x: -1, y: 0 });
-    } else {
-      queueDirection(dy > 0 ? { x: 0, y: 1 } : { x: 0, y: -1 });
+  function onTap() {
+    if (state === 'ready' || state === 'gameover') {
+      resetGame();
+      setState('playing');
+    } else if (state === 'paused') {
+      setState('playing');
     }
   }
+
+  const unbindTouch = bindTouchInput(canvas, {
+    onSwipe(direction) {
+      if (state !== 'playing' && state !== 'paused') return;
+      if (direction === 'up') queueDirection({ x: 0, y: -1 });
+      else if (direction === 'down') queueDirection({ x: 0, y: 1 });
+      else if (direction === 'left') queueDirection({ x: -1, y: 0 });
+      else queueDirection({ x: 1, y: 0 });
+    },
+    onTap,
+  });
 
   const resizeObserver = new ResizeObserver(resizeCanvas);
   resizeObserver.observe(root);
   window.addEventListener('keydown', onKeyDown);
-  canvas.addEventListener('touchstart', onTouchStart, { passive: true });
-  canvas.addEventListener('touchend', onTouchEnd, { passive: true });
 
   resetGame();
   setState('ready');
@@ -310,8 +310,7 @@ export function initSnake(root: HTMLElement): () => void {
     stopTick();
     resizeObserver.disconnect();
     window.removeEventListener('keydown', onKeyDown);
-    canvas.removeEventListener('touchstart', onTouchStart);
-    canvas.removeEventListener('touchend', onTouchEnd);
+    unbindTouch();
     root.innerHTML = '';
   };
 }

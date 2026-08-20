@@ -1,3 +1,5 @@
+import { bindTouchInput } from './lib/touch';
+
 type Direction = 'up' | 'down' | 'left' | 'right';
 type GameState = 'ready' | 'playing' | 'gameover';
 
@@ -48,7 +50,7 @@ export function init2048(root: HTMLElement): () => void {
 
   const statusEl = document.createElement('span');
   statusEl.className = 'text-games-accent';
-  statusEl.textContent = 'Press Space to start';
+  statusEl.textContent = 'Tap or Space to start';
 
   hud.append(scoreEl, highScoreEl, statusEl);
 
@@ -59,7 +61,8 @@ export function init2048(root: HTMLElement): () => void {
 
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
-  help.textContent = 'Arrow keys or WASD to slide. Space to start or restart.';
+  help.textContent =
+    'Arrow keys, WASD, or swipe to slide. Tap or Space to start or restart.';
 
   root.append(hud, canvas, help);
 
@@ -70,7 +73,6 @@ export function init2048(root: HTMLElement): () => void {
   let score = 0;
   let highScore = savedHigh;
   let state: GameState = 'ready';
-  let touchStart: { x: number; y: number } | null = null;
 
   function emptyGrid(): number[][] {
     return Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
@@ -202,9 +204,9 @@ export function init2048(root: HTMLElement): () => void {
 
   function setState(next: GameState) {
     state = next;
-    if (state === 'ready') statusEl.textContent = 'Press Space to start';
+    if (state === 'ready') statusEl.textContent = 'Tap or Space to start';
     else if (state === 'playing') statusEl.textContent = 'Playing';
-    else statusEl.textContent = 'Game over — Space to retry';
+    else statusEl.textContent = 'Game over — tap or Space to retry';
     draw();
   }
 
@@ -270,12 +272,12 @@ export function init2048(root: HTMLElement): () => void {
       ctx.font = 'bold 20px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const message = state === 'ready' ? 'Press Space to play' : 'Game Over';
+      const message = state === 'ready' ? 'Tap or Space to play' : 'Game Over';
       ctx.fillText(message, size / 2, size / 2 - 12);
       ctx.fillStyle = COLORS.textMuted;
       ctx.font = '13px Inter, sans-serif';
       ctx.fillText(
-        state === 'gameover' ? `Score: ${score}` : 'Arrow keys or WASD',
+        state === 'gameover' ? `Score: ${score}` : 'Swipe or use arrow keys',
         size / 2,
         size / 2 + 16,
       );
@@ -295,8 +297,7 @@ export function init2048(root: HTMLElement): () => void {
     const key = event.key.toLowerCase();
     if (key === ' ' || key === 'enter') {
       event.preventDefault();
-      resetGame();
-      setState('playing');
+      startOrRestart();
       return;
     }
     const direction = directionFromKey(event.key);
@@ -306,30 +307,23 @@ export function init2048(root: HTMLElement): () => void {
     }
   }
 
-  function onTouchStart(event: TouchEvent) {
-    const touch = event.touches[0];
-    touchStart = { x: touch.clientX, y: touch.clientY };
+  function startOrRestart() {
+    resetGame();
+    setState('playing');
   }
 
-  function onTouchEnd(event: TouchEvent) {
-    if (!touchStart) return;
-    const touch = event.changedTouches[0];
-    const dx = touch.clientX - touchStart.x;
-    const dy = touch.clientY - touchStart.y;
-    touchStart = null;
-    if (Math.abs(dx) < 24 && Math.abs(dy) < 24) return;
-    if (Math.abs(dx) > Math.abs(dy)) {
-      tryMove(dx > 0 ? 'right' : 'left');
-    } else {
-      tryMove(dy > 0 ? 'down' : 'up');
-    }
-  }
+  const unbindTouch = bindTouchInput(canvas, {
+    onSwipe(direction) {
+      tryMove(direction);
+    },
+    onTap() {
+      if (state === 'ready' || state === 'gameover') startOrRestart();
+    },
+  });
 
   const resizeObserver = new ResizeObserver(resizeCanvas);
   resizeObserver.observe(root);
   window.addEventListener('keydown', onKeyDown);
-  canvas.addEventListener('touchstart', onTouchStart, { passive: true });
-  canvas.addEventListener('touchend', onTouchEnd, { passive: true });
 
   resetGame();
   setState('ready');
@@ -338,8 +332,7 @@ export function init2048(root: HTMLElement): () => void {
   return () => {
     resizeObserver.disconnect();
     window.removeEventListener('keydown', onKeyDown);
-    canvas.removeEventListener('touchstart', onTouchStart);
-    canvas.removeEventListener('touchend', onTouchEnd);
+    unbindTouch();
     root.innerHTML = '';
   };
 }

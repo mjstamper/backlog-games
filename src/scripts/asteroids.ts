@@ -1,3 +1,6 @@
+import { bindTouchInput } from './lib/touch';
+import { createVirtualControls } from './lib/virtualControls';
+
 type GameState = 'ready' | 'playing' | 'paused' | 'gameover';
 type Point = { x: number; y: number };
 
@@ -78,7 +81,7 @@ export function initAsteroids(root: HTMLElement): () => void {
 
   const statusEl = document.createElement('span');
   statusEl.className = 'text-games-accent';
-  statusEl.textContent = 'Press Space to start';
+  statusEl.textContent = 'Tap or Space to start';
 
   hud.append(scoreEl, highScoreEl, livesEl, statusEl);
 
@@ -90,7 +93,7 @@ export function initAsteroids(root: HTMLElement): () => void {
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
   help.textContent =
-    'Arrow keys to turn and thrust. Space to shoot and start. P to pause.';
+    'On-screen buttons or arrow keys to fly. Tap or Space to start and shoot. P to pause.';
 
   root.append(hud, canvas, help);
 
@@ -250,15 +253,15 @@ export function initAsteroids(root: HTMLElement): () => void {
     }
     ship = createShip();
     bullets = [];
-    statusEl.textContent = 'Life lost — Space to continue';
+    statusEl.textContent = 'Life lost — tap or Space to continue';
   }
 
   function setState(next: GameState) {
     state = next;
-    if (state === 'ready') statusEl.textContent = 'Press Space to start';
+    if (state === 'ready') statusEl.textContent = 'Tap or Space to start';
     else if (state === 'playing') statusEl.textContent = 'Playing';
     else if (state === 'paused') statusEl.textContent = 'Paused';
-    else statusEl.textContent = 'Game over — Space to retry';
+    else statusEl.textContent = 'Game over — tap or Space to retry';
     draw();
   }
 
@@ -395,7 +398,7 @@ export function initAsteroids(root: HTMLElement): () => void {
 
       const message =
         state === 'ready'
-          ? 'Press Space to play'
+          ? 'Tap or Space to play'
           : state === 'paused'
             ? 'Paused'
             : 'Game Over';
@@ -404,7 +407,7 @@ export function initAsteroids(root: HTMLElement): () => void {
       ctx.fillStyle = COLORS.textMuted;
       ctx.font = '14px Inter, sans-serif';
       ctx.fillText(
-        state === 'gameover' ? `Score: ${score}` : 'Arrows to fly, Space to shoot',
+        state === 'gameover' ? `Score: ${score}` : 'Use on-screen buttons or arrows',
         PLAY_WIDTH / 2,
         PLAY_HEIGHT / 2 + 14,
       );
@@ -424,14 +427,7 @@ export function initAsteroids(root: HTMLElement): () => void {
 
     if (key === ' ' || key === 'enter') {
       event.preventDefault();
-      if (state === 'ready' || state === 'gameover') {
-        resetGame();
-        setState('playing');
-      } else if (state === 'paused') {
-        setState('playing');
-      } else {
-        fireBullet();
-      }
+      startOrContinue();
       return;
     }
 
@@ -453,6 +449,36 @@ export function initAsteroids(root: HTMLElement): () => void {
     else if (key === 'arrowup') keys.up = false;
   }
 
+  function startOrContinue() {
+    if (state === 'ready' || state === 'gameover') {
+      resetGame();
+      setState('playing');
+    } else if (state === 'paused') {
+      setState('playing');
+    } else {
+      fireBullet();
+    }
+  }
+
+  const unbindTouch = bindTouchInput(canvas, {
+    onTap: startOrContinue,
+  });
+
+  const destroyVirtualControls = createVirtualControls(root, {
+    onLeft: (pressed) => {
+      keys.left = pressed;
+    },
+    onRight: (pressed) => {
+      keys.right = pressed;
+    },
+    onThrust: (pressed) => {
+      keys.up = pressed;
+    },
+    onFire: () => {
+      if (state === 'playing') fireBullet();
+    },
+  });
+
   const resizeObserver = new ResizeObserver(resizeCanvas);
   resizeObserver.observe(root);
   window.addEventListener('keydown', onKeyDown);
@@ -469,6 +495,8 @@ export function initAsteroids(root: HTMLElement): () => void {
     resizeObserver.disconnect();
     window.removeEventListener('keydown', onKeyDown);
     window.removeEventListener('keyup', onKeyUp);
+    unbindTouch();
+    destroyVirtualControls();
     root.innerHTML = '';
   };
 }

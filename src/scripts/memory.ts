@@ -27,19 +27,19 @@ export function initMemory(root: HTMLElement): () => void {
 
   const statusEl = document.createElement('span');
   statusEl.className = 'w-full text-center text-games-accent sm:w-auto sm:text-right';
-  statusEl.textContent = 'Click a card to start';
+  statusEl.textContent = 'Tap a card to start';
 
   hud.append(movesEl, timeEl, bestEl, statusEl);
 
   const board = document.createElement('div');
-  board.className = 'grid w-full max-w-[400px] gap-2';
+  board.className = 'grid w-full max-w-[400px] touch-manipulation gap-2';
   board.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
   board.setAttribute('role', 'grid');
   board.setAttribute('aria-label', 'Memory match game board');
 
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
-  help.textContent = 'Click cards to find matching pairs. Space to restart.';
+  help.textContent = 'Tap cards to find matching pairs. Space to restart.';
 
   root.append(hud, board, help);
 
@@ -103,7 +103,7 @@ export function initMemory(root: HTMLElement): () => void {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className =
-        'group relative aspect-square w-full rounded-lg border border-games-border bg-games-surface text-lg font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-games-accent';
+        'group relative aspect-square w-full touch-manipulation rounded-lg border border-games-border bg-games-surface text-lg font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-games-accent';
       btn.setAttribute('role', 'gridcell');
       btn.setAttribute('aria-label', card.matched ? `Matched ${card.symbol}` : 'Hidden card');
 
@@ -135,7 +135,7 @@ export function initMemory(root: HTMLElement): () => void {
     elapsedMs = 0;
     lockBoard = false;
     state = 'ready';
-    statusEl.textContent = 'Click a card to start';
+    statusEl.textContent = 'Tap a card to start';
     updateHud();
     renderBoard();
   }
