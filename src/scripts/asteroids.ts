@@ -1,5 +1,5 @@
 import { bindTouchInput } from './lib/touch';
-import { createVirtualControls } from './lib/virtualControls';
+import { createVirtualGameControls } from './lib/virtualDpad';
 
 type GameState = 'ready' | 'playing' | 'paused' | 'gameover';
 type Point = { x: number; y: number };
@@ -90,12 +90,15 @@ export function initAsteroids(root: HTMLElement): () => void {
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Asteroids game board');
 
+  const controlsMount = document.createElement('div');
+  controlsMount.className = 'w-full max-w-[640px]';
+
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
   help.textContent =
-    'On-screen buttons or arrow keys to fly. Tap or Space to start and shoot. P to pause.';
+    'D-pad to turn, action buttons to thrust and fire. Tap or Space to start and shoot. P to pause.';
 
-  root.append(hud, canvas, help);
+  root.append(hud, canvas, controlsMount, help);
 
   const context = canvas.getContext('2d');
   if (!context) return () => undefined;
@@ -465,19 +468,29 @@ export function initAsteroids(root: HTMLElement): () => void {
     onTap: startOrContinue,
   });
 
-  const destroyVirtualControls = createVirtualControls(root, {
-    onLeft: (pressed) => {
-      keys.left = pressed;
+  const destroyVirtualControls = createVirtualGameControls(controlsMount, {
+    dpadMode: 'hold',
+    dpadDirections: ['left', 'right'],
+    onDpad(direction, pressed) {
+      if (direction === 'left') keys.left = pressed;
+      else if (direction === 'right') keys.right = pressed;
     },
-    onRight: (pressed) => {
-      keys.right = pressed;
-    },
-    onThrust: (pressed) => {
-      keys.up = pressed;
-    },
-    onFire: () => {
-      if (state === 'playing') fireBullet();
-    },
+    actions: [
+      {
+        label: 'Thrust',
+        ariaLabel: 'Thrust',
+        onHold: (pressed) => {
+          keys.up = pressed;
+        },
+      },
+      {
+        label: 'Fire',
+        ariaLabel: 'Fire',
+        onPress: () => {
+          if (state === 'playing') fireBullet();
+        },
+      },
+    ],
   });
 
   const resizeObserver = new ResizeObserver(resizeCanvas);

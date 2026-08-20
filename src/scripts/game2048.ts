@@ -1,4 +1,5 @@
 import { bindTouchInput } from './lib/touch';
+import { createVirtualDpad } from './lib/virtualDpad';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 type GameState = 'ready' | 'playing' | 'gameover';
@@ -59,12 +60,15 @@ export function init2048(root: HTMLElement): () => void {
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', '2048 game board');
 
+  const controlsMount = document.createElement('div');
+  controlsMount.className = 'w-full max-w-[400px]';
+
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
   help.textContent =
-    'Arrow keys, WASD, or swipe to slide. Tap or Space to start or restart.';
+    'Arrow keys, WASD, swipe, or D-pad to slide. Tap or Space to start or restart.';
 
-  root.append(hud, canvas, help);
+  root.append(hud, canvas, controlsMount, help);
 
   const context = canvas.getContext('2d');
   if (!context) return () => undefined;
@@ -322,6 +326,13 @@ export function init2048(root: HTMLElement): () => void {
     },
   });
 
+  const destroyDpad = createVirtualDpad(controlsMount, {
+    dpadMode: 'press',
+    onDpad(direction) {
+      tryMove(direction);
+    },
+  });
+
   const resizeObserver = new ResizeObserver(resizeCanvas);
   resizeObserver.observe(root);
   window.addEventListener('keydown', onKeyDown);
@@ -334,6 +345,7 @@ export function init2048(root: HTMLElement): () => void {
     resizeObserver.disconnect();
     window.removeEventListener('keydown', onKeyDown);
     unbindTouch();
+    destroyDpad();
     root.innerHTML = '';
   };
 }

@@ -1,4 +1,5 @@
 import { bindTouchInput } from './lib/touch';
+import { createVirtualDpad } from './lib/virtualDpad';
 
 type Point = { x: number; y: number };
 type Direction = Point;
@@ -46,12 +47,15 @@ export function initSnake(root: HTMLElement): () => void {
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Snake game board');
 
+  const controlsMount = document.createElement('div');
+  controlsMount.className = 'w-full max-w-[576px]';
+
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
   help.textContent =
-    'Arrow keys, WASD, or swipe to move. Tap or Space to start. P to pause.';
+    'Arrow keys, WASD, swipe, or D-pad to move. Tap or Space to start. P to pause.';
 
-  root.append(hud, canvas, help);
+  root.append(hud, canvas, controlsMount, help);
 
   const context = canvas.getContext('2d');
   if (!context) return () => undefined;
@@ -238,7 +242,7 @@ export function initSnake(root: HTMLElement): () => void {
       ctx.fillStyle = COLORS.textMuted;
       ctx.font = '13px Inter, sans-serif';
       ctx.fillText(
-        state === 'gameover' ? `Score: ${score}` : 'Swipe or use arrow keys',
+        state === 'gameover' ? `Score: ${score}` : 'Swipe, D-pad, or arrow keys',
         canvas.width / 2,
         canvas.height / 2 + 16,
       );
@@ -299,6 +303,17 @@ export function initSnake(root: HTMLElement): () => void {
     onTap,
   });
 
+  const destroyDpad = createVirtualDpad(controlsMount, {
+    dpadMode: 'press',
+    onDpad(direction) {
+      if (state !== 'playing' && state !== 'paused') return;
+      if (direction === 'up') queueDirection({ x: 0, y: -1 });
+      else if (direction === 'down') queueDirection({ x: 0, y: 1 });
+      else if (direction === 'left') queueDirection({ x: -1, y: 0 });
+      else queueDirection({ x: 1, y: 0 });
+    },
+  });
+
   const resizeObserver = new ResizeObserver(resizeCanvas);
   resizeObserver.observe(root);
   window.addEventListener('keydown', onKeyDown);
@@ -312,6 +327,7 @@ export function initSnake(root: HTMLElement): () => void {
     resizeObserver.disconnect();
     window.removeEventListener('keydown', onKeyDown);
     unbindTouch();
+    destroyDpad();
     root.innerHTML = '';
   };
 }
