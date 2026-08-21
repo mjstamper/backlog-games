@@ -86,7 +86,7 @@ export const games: Game[] = [
       'Classic Klondike solitaire. Build foundations from ace to king and clear the tableau.',
     category: 'casual',
     status: 'playable',
-    featured: false,
+    featured: true,
     thumbnail: '/thumbnails/solitaire.svg',
     tags: ['cards', 'classic', 'tap'],
   },
