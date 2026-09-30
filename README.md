@@ -15,13 +15,17 @@ The catalog lives in [src/config/site.ts](src/config/site.ts). Each entry is a `
 | Memory Match | Puzzle | Playable |
 | 2048 | Puzzle | Playable |
 | Asteroids | Action | Playable |
+| Solitaire | Casual | Playable |
+| Minesweeper | Casual | Playable |
+| Tetris | Casual | Coming soon |
 
 ### Adding a game
 
 1. Add a `Game` entry to the `games` array in [src/config/site.ts](src/config/site.ts).
 2. Drop a 16:10 thumbnail at `public/thumbnails/<slug>.svg` (or update the `thumbnail` path).
-3. Implement the game and wire it into [src/pages/[slug].astro](src/pages/%5Bslug%5D.astro). Game logic lives in `src/scripts/` (see [src/scripts/snake.ts](src/scripts/snake.ts)) and is mounted through a component in `src/components/play/`.
-4. Set `status: 'playable'` once it works. Coming-soon entries render [src/components/ComingSoonStage.astro](src/components/ComingSoonStage.astro).
+3. Implement the game in `src/scripts/` (see [src/scripts/snake.ts](src/scripts/snake.ts)) and add a mount component in `src/components/play/`.
+4. Register the slug in [src/config/gameRegistry.ts](src/config/gameRegistry.ts). [src/pages/[slug].astro](src/pages/%5Bslug%5D.astro) loads playable games from that registry.
+5. Set `status: 'playable'` once it works. Coming-soon entries render [src/components/ComingSoonStage.astro](src/components/ComingSoonStage.astro).
 
 ## Development
 
@@ -88,13 +92,14 @@ Optional IPv6: add four `AAAA` records for `@` pointing to `2606:50c0:8000::153`
 
 - [public/robots.txt](public/robots.txt) references the sitemap URL.
 - [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) generates `sitemap-index.xml` at build time (requires `site` in `astro.config.mjs`).
-- The Open Graph image is referenced at `/og-image.png` in [src/layouts/Layout.astro](src/layouts/Layout.astro). Add a 1200x630 branded image at `public/og-image.png` for rich social previews.
+- The Open Graph image lives at [public/og-image.png](public/og-image.png) and is referenced in [src/layouts/Layout.astro](src/layouts/Layout.astro).
 
 ## Project layout
 
 | Path | Purpose |
 |------|---------|
 | `src/config/site.ts` | Game catalog and site metadata |
+| `src/config/gameRegistry.ts` | Slug-to-mount map for playable games |
 | `src/pages/` | Routes (`/` catalog, `/<slug>` per-game pages) |
 | `src/components/` | UI components (`play/` holds game mounts) |
 | `src/scripts/` | Game logic (e.g. `snake.ts`) |
