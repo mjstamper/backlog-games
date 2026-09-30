@@ -90,6 +90,28 @@ export const games: Game[] = [
     thumbnail: '/thumbnails/solitaire.svg',
     tags: ['cards', 'classic', 'tap'],
   },
+  {
+    slug: 'minesweeper',
+    title: 'Minesweeper',
+    description:
+      'Click on the squares to reveal the numbers and avoid the mines.',
+    category: 'casual',
+    status: 'playable',
+    featured: false,
+    thumbnail: '/thumbnails/minesweeper.svg',
+    tags: ['mines', 'click', 'grid'],
+  },
+  {
+    slug: 'tetris',
+    title: 'Tetris',
+    description:
+      'Fit the falling blocks into the grid to clear lines and score points.',
+    category: 'casual',
+    status: 'coming-soon',
+    featured: false,
+    thumbnail: '/thumbnails/tetris.svg',
+    tags: ['tetris', 'blocks', 'grid'],
+  },
 ];
 
 export function getGame(slug: string): Game | undefined {
