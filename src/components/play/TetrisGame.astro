@@ -1,0 +1,12 @@
+<div id="tetris-mount" class="w-full"></div>
+
+<script>
+  import { initTetris } from '../../scripts/tetris';
+
+  const mount = document.getElementById('tetris-mount');
+  if (!mount) throw new Error('Tetris mount element not found');
+
+  const destroy = initTetris(mount);
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>

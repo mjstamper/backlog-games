@@ -1,0 +1,37 @@
+---
+import CategoryFilter from './CategoryFilter.astro';
+---
+
+<div class="flex w-full flex-col gap-3 sm:max-w-xl sm:ml-auto">
+  <label class="sr-only" for="catalog-search">Search games</label>
+  <input
+    id="catalog-search"
+    type="search"
+    name="catalog-search"
+    placeholder="Search by title or tag..."
+    autocomplete="off"
+    class="w-full rounded-lg border border-games-border bg-games-surface px-3 py-2 text-sm text-games-ink placeholder:text-games-ink-muted focus:border-games-accent focus:outline-none focus:ring-1 focus:ring-games-accent"
+  />
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+    <label class="flex items-center gap-2 text-sm text-games-ink-muted">
+      <span class="whitespace-nowrap">Sort</span>
+      <select
+        id="catalog-sort"
+        name="catalog-sort"
+        class="rounded-lg border border-games-border bg-games-surface px-2 py-1.5 text-sm text-games-ink focus:border-games-accent focus:outline-none focus:ring-1 focus:ring-games-accent"
+      >
+        <option value="recent">Recently added</option>
+        <option value="name">Name (A-Z)</option>
+        <option value="category">Category</option>
+      </select>
+    </label>
+    <CategoryFilter />
+  </div>
+</div>
+
+<script>
+  import { initCatalogControls } from '../scripts/catalog';
+
+  const destroy = initCatalogControls();
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>

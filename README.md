@@ -17,7 +17,7 @@ The catalog lives in [src/config/site.ts](src/config/site.ts). Each entry is a `
 | Asteroids | Action | Playable |
 | Solitaire | Casual | Playable |
 | Minesweeper | Casual | Playable |
-| Tetris | Casual | Coming soon |
+| Tetris | Casual | Playable |
 
 ### Adding a game
 

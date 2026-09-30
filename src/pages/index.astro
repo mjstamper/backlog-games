@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import ArcadeHero from '../components/ArcadeHero.astro';
 import FeaturedBanner from '../components/FeaturedBanner.astro';
-import CategoryFilter from '../components/CategoryFilter.astro';
+import CatalogControls from '../components/CatalogControls.astro';
 import GameGrid from '../components/GameGrid.astro';
 import { games, getFeaturedGame } from '../config/site';
 
@@ -16,11 +16,11 @@ const featured = getFeaturedGame();
     <FeaturedBanner game={featured} />
 
     <div id="all-games" class="mt-12 flex flex-col gap-6">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <h2 class="text-2xl font-bold tracking-tight text-games-ink">
           All games
         </h2>
-        <CategoryFilter />
+        <CatalogControls />
       </div>
       <GameGrid games={games} />
     </div>

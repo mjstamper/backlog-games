@@ -7,9 +7,19 @@ interface Props {
 
 const { game } = Astro.props;
 const isPlayable = game.status === 'playable';
+const searchText = [game.title, game.description, ...game.tags]
+  .join(' ')
+  .toLowerCase();
+const addedAtMs = game.addedAt ? Date.parse(game.addedAt) : 0;
 ---
 
-<li class="game-card" data-category={game.category}>
+<li
+  class="game-card"
+  data-category={game.category}
+  data-sort-name={game.title.toLowerCase()}
+  data-search-text={searchText}
+  data-added-at={String(Number.isFinite(addedAtMs) ? addedAtMs : 0)}
+>
   <a
     href={`/${game.slug}`}
     class="group flex h-full flex-col overflow-hidden rounded-2xl border border-games-border bg-games-surface transition-colors hover:border-games-accent hover:bg-games-surface-hover"
