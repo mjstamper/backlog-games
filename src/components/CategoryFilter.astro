@@ -22,23 +22,3 @@ const filters = [{ id: 'all', label: 'All' }, ...categories];
     ))
   }
 </div>
-
-<script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.category-filter');
-  const cards = document.querySelectorAll<HTMLElement>('.game-card');
-
-  buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const selected = button.dataset.category;
-
-      buttons.forEach((other) =>
-        other.setAttribute('aria-pressed', String(other === button)),
-      );
-
-      cards.forEach((card) => {
-        const show = selected === 'all' || card.dataset.category === selected;
-        card.style.display = show ? '' : 'none';
-      });
-    });
-  });
-</script>

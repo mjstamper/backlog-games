@@ -1,3 +1,5 @@
+import { getFeaturedSlugForDate } from './featured';
+
 export type GameCategory = 'arcade' | 'puzzle' | 'action' | 'casual';
 export type GameStatus = 'coming-soon' | 'playable';
 
@@ -8,6 +10,8 @@ export type Game = {
   category: GameCategory;
   status: GameStatus;
   featured?: boolean;
+  /** ISO date string for catalog sort (recently added). */
+  addedAt?: string;
   thumbnail: string;
   tags: string[];
 };
@@ -36,6 +40,7 @@ export const games: Game[] = [
     category: 'arcade',
     status: 'playable',
     featured: false,
+    addedAt: '2026-01-15',
     thumbnail: '/thumbnails/snake.svg',
     tags: ['classic', 'keyboard', 'high-score'],
   },
@@ -46,6 +51,7 @@ export const games: Game[] = [
       'Bounce the ball off your paddle and smash through every brick to clear the board.',
     category: 'arcade',
     status: 'playable',
+    addedAt: '2026-02-01',
     thumbnail: '/thumbnails/breakout.svg',
     tags: ['classic', 'paddle', 'high-score'],
   },
@@ -56,6 +62,7 @@ export const games: Game[] = [
       'Flip the cards two at a time and match every pair before the clock gets the better of you.',
     category: 'puzzle',
     status: 'playable',
+    addedAt: '2026-03-01',
     thumbnail: '/thumbnails/memory.svg',
     tags: ['cards', 'memory', 'timer'],
   },
@@ -66,6 +73,7 @@ export const games: Game[] = [
       'Slide and merge matching tiles to reach the elusive 2048 tile, and then keep going.',
     category: 'puzzle',
     status: 'playable',
+    addedAt: '2026-04-01',
     thumbnail: '/thumbnails/2048.svg',
     tags: ['numbers', 'grid', 'strategy'],
   },
@@ -76,6 +84,7 @@ export const games: Game[] = [
       'Pilot your ship through a field of drifting rocks and blast them apart before they hit you.',
     category: 'action',
     status: 'playable',
+    addedAt: '2026-05-01',
     thumbnail: '/thumbnails/asteroids.svg',
     tags: ['space', 'shooter', 'physics'],
   },
@@ -86,7 +95,8 @@ export const games: Game[] = [
       'Classic Klondike solitaire. Build foundations from ace to king and clear the tableau.',
     category: 'casual',
     status: 'playable',
-    featured: true,
+    featured: false,
+    addedAt: '2026-08-15',
     thumbnail: '/thumbnails/solitaire.svg',
     tags: ['cards', 'classic', 'tap'],
   },
@@ -97,7 +107,8 @@ export const games: Game[] = [
       'Click on the squares to reveal the numbers and avoid the mines.',
     category: 'casual',
     status: 'playable',
-    featured: false,
+    featured: true,
+    addedAt: '2026-09-28',
     thumbnail: '/thumbnails/minesweeper.svg',
     tags: ['mines', 'click', 'grid'],
   },
@@ -107,8 +118,9 @@ export const games: Game[] = [
     description:
       'Fit the falling blocks into the grid to clear lines and score points.',
     category: 'casual',
-    status: 'coming-soon',
+    status: 'playable',
     featured: false,
+    addedAt: '2026-10-01',
     thumbnail: '/thumbnails/tetris.svg',
     tags: ['tetris', 'blocks', 'grid'],
   },
@@ -118,6 +130,15 @@ export function getGame(slug: string): Game | undefined {
   return games.find((game) => game.slug === slug);
 }
 
-export function getFeaturedGame(): Game {
-  return games.find((game) => game.featured) ?? games[0];
+export function getFeaturedGame(referenceDate = new Date()): Game {
+  const manual = games.find((game) => game.featured);
+  if (manual) return manual;
+
+  const rotatedSlug = getFeaturedSlugForDate(referenceDate);
+  if (rotatedSlug) {
+    const rotated = getGame(rotatedSlug);
+    if (rotated) return rotated;
+  }
+
+  return games[0];
 }
