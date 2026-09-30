@@ -13,6 +13,8 @@ type ActivePiece = {
 const COLS = 10;
 const ROWS = 20;
 const HIDDEN_ROWS = 2;
+const PREVIEW_COLS = 4;
+const PREVIEW_ROWS = 4;
 const HIGH_SCORE_KEY = 'backloggames-tetris-high-score';
 
 const COLORS = {
@@ -232,6 +234,22 @@ function cellsFor(piece: ActivePiece): [number, number][] {
   return SHAPES[piece.kind][piece.rotation % 4];
 }
 
+function previewOrigin(kind: PieceKind): { ox: number; oy: number } {
+  const cells = SHAPES[kind][0];
+  const xs = cells.map(([x]) => x);
+  const ys = cells.map(([, y]) => y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const w = maxX - minX + 1;
+  const h = maxY - minY + 1;
+  return {
+    ox: Math.floor((PREVIEW_COLS - w) / 2) - minX,
+    oy: Math.floor((PREVIEW_ROWS - h) / 2) - minY,
+  };
+}
+
 export function initTetris(root: HTMLElement): () => void {
   root.innerHTML = '';
   root.className = 'flex min-h-[420px] flex-col items-center justify-center gap-4 p-4';
@@ -259,26 +277,48 @@ export function initTetris(root: HTMLElement): () => void {
 
   hud.append(scoreEl, levelEl, linesEl, highScoreEl, statusEl);
 
+  const playRow = document.createElement('div');
+  playRow.className =
+    'flex w-full max-w-[480px] flex-wrap items-start justify-center gap-3';
+
   const canvas = document.createElement('canvas');
-  canvas.className = 'w-full max-w-[400px] touch-none rounded-lg border border-games-border';
+  canvas.className = 'max-w-full shrink-0 touch-none rounded-lg border border-games-border';
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Tetris playfield');
 
+  const nextPanel = document.createElement('div');
+  nextPanel.className = 'flex shrink-0 flex-col items-center gap-1';
+
+  const nextLabel = document.createElement('span');
+  nextLabel.className = 'text-xs font-semibold text-games-ink-muted';
+  nextLabel.textContent = 'Next';
+
+  const nextCanvas = document.createElement('canvas');
+  nextCanvas.className = 'max-w-full shrink-0 touch-none rounded-lg border border-games-border';
+  nextCanvas.setAttribute('role', 'img');
+  nextCanvas.setAttribute('aria-label', 'Next Tetris piece');
+
+  nextPanel.append(nextLabel, nextCanvas);
+  playRow.append(canvas, nextPanel);
+
   const controlsMount = document.createElement('div');
-  controlsMount.className = 'w-full max-w-[400px]';
+  controlsMount.className = 'w-full max-w-[480px]';
 
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
   help.textContent =
     'Arrows to move, Up/X to rotate, Space to hard drop. P to pause. D-pad + buttons on mobile.';
 
-  root.append(hud, canvas, controlsMount, help);
+  root.append(hud, playRow, controlsMount, help);
 
   const context = canvas.getContext('2d');
-  if (!context) return () => undefined;
+  const nextContext = nextCanvas.getContext('2d');
+  if (!context || !nextContext) return () => undefined;
   const ctx: CanvasRenderingContext2D = context;
+  const nextCtx: CanvasRenderingContext2D = nextContext;
 
   let cellSize = 20;
+  let previewCellSize = 16;
   let board: (PieceKind | null)[][] = [];
   let piece: ActivePiece | null = null;
   let nextKind: PieceKind = 'T';
@@ -312,10 +352,19 @@ export function initTetris(root: HTMLElement): () => void {
 
   function resizeCanvas() {
     const width = Math.min(root.clientWidth - 32, COLS * 24);
-    cellSize = Math.floor(width / COLS);
+    cellSize = Math.max(8, Math.floor(width / COLS));
+    previewCellSize = Math.max(10, Math.floor(cellSize * 0.85));
+
     canvas.width = cellSize * COLS;
     canvas.height = cellSize * ROWS;
-    canvas.style.height = `${cellSize * ROWS}px`;
+    canvas.style.width = `${canvas.width}px`;
+    canvas.style.height = `${canvas.height}px`;
+
+    nextCanvas.width = previewCellSize * PREVIEW_COLS;
+    nextCanvas.height = previewCellSize * PREVIEW_ROWS;
+    nextCanvas.style.width = `${nextCanvas.width}px`;
+    nextCanvas.style.height = `${nextCanvas.height}px`;
+
     draw();
   }
 
@@ -445,19 +494,29 @@ export function initTetris(root: HTMLElement): () => void {
     if (!tryMove(0, 1)) lockPiece();
   }
 
+  function drawBlock(
+    targetCtx: CanvasRenderingContext2D,
+    size: number,
+    gridX: number,
+    gridY: number,
+    kind: PieceKind,
+    alpha = 1,
+  ) {
+    const px = gridX * size;
+    const py = gridY * size;
+    const pad = Math.max(1, Math.floor(size * 0.08));
+    targetCtx.globalAlpha = alpha;
+    targetCtx.fillStyle = PIECE_COLOR[kind];
+    targetCtx.fillRect(px + pad, py + pad, size - pad * 2, size - pad * 2);
+    targetCtx.strokeStyle = COLORS.border;
+    targetCtx.lineWidth = 1;
+    targetCtx.strokeRect(px + pad, py + pad, size - pad * 2, size - pad * 2);
+    targetCtx.globalAlpha = 1;
+  }
+
   function drawCell(x: number, y: number, kind: PieceKind, alpha = 1) {
     if (y < HIDDEN_ROWS) return;
-    const drawY = y - HIDDEN_ROWS;
-    const px = x * cellSize;
-    const py = drawY * cellSize;
-    const pad = Math.max(1, Math.floor(cellSize * 0.08));
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = PIECE_COLOR[kind];
-    ctx.fillRect(px + pad, py + pad, cellSize - pad * 2, cellSize - pad * 2);
-    ctx.strokeStyle = COLORS.border;
-    ctx.lineWidth = 1;
-    ctx.strokeRect(px + pad, py + pad, cellSize - pad * 2, cellSize - pad * 2);
-    ctx.globalAlpha = 1;
+    drawBlock(ctx, cellSize, x, y - HIDDEN_ROWS, kind, alpha);
   }
 
   function drawBoard() {
@@ -501,6 +560,30 @@ export function initTetris(root: HTMLElement): () => void {
     }
   }
 
+  function drawNextPreview() {
+    nextCtx.fillStyle = COLORS.background;
+    nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+    nextCtx.strokeStyle = COLORS.grid;
+    nextCtx.lineWidth = 1;
+    for (let x = 0; x <= PREVIEW_COLS; x++) {
+      nextCtx.beginPath();
+      nextCtx.moveTo(x * previewCellSize + 0.5, 0);
+      nextCtx.lineTo(x * previewCellSize + 0.5, nextCanvas.height);
+      nextCtx.stroke();
+    }
+    for (let y = 0; y <= PREVIEW_ROWS; y++) {
+      nextCtx.beginPath();
+      nextCtx.moveTo(0, y * previewCellSize + 0.5);
+      nextCtx.lineTo(nextCanvas.width, y * previewCellSize + 0.5);
+      nextCtx.stroke();
+    }
+
+    const { ox, oy } = previewOrigin(nextKind);
+    for (const [cx, cy] of SHAPES[nextKind][0]) {
+      drawBlock(nextCtx, previewCellSize, ox + cx, oy + cy, nextKind);
+    }
+  }
+
   function drawOverlay() {
     if (state === 'playing') return;
     ctx.fillStyle = 'rgba(15, 20, 25, 0.72)';
@@ -531,6 +614,7 @@ export function initTetris(root: HTMLElement): () => void {
     drawBoard();
     drawActive();
     drawOverlay();
+    drawNextPreview();
   }
 
   function resetGame() {
