@@ -1,5 +1,6 @@
 ---
 import type { Game } from '../config/site';
+import RelatedGames from './RelatedGames.astro';
 
 interface Props {
   game: Game;
@@ -88,6 +89,8 @@ const { game } = Astro.props;
       </div>
     </dl>
   </div>
+
+  <RelatedGames game={game} />
 </div>
 
 <script>

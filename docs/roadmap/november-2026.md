@@ -43,4 +43,4 @@ Add `instructions: string[]` to any game in [`site.ts`](../src/config/site.ts). 
 
 ## Next
 
-See [December 2026](./december-2026.md) — scores migration + 2048 spotlight.
+See [December 2026](./december-2026.md) — scores migration + 2048 spotlight ([January 2027](./january-2027.md) follows).

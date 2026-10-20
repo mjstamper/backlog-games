@@ -60,6 +60,11 @@ export const games: Game[] = [
     addedAt: '2026-02-01',
     thumbnail: '/thumbnails/breakout.svg',
     tags: ['classic', 'paddle', 'high-score'],
+    instructions: [
+      'Clear every brick by bouncing the ball with your paddle.',
+      'Drag, use A/D, or move the mouse to steer the paddle.',
+      'Tap or Space to launch the ball; P to pause.',
+    ],
   },
   {
     slug: 'memory',
@@ -71,6 +76,11 @@ export const games: Game[] = [
     addedAt: '2026-03-01',
     thumbnail: '/thumbnails/memory.svg',
     tags: ['cards', 'memory', 'timer'],
+    instructions: [
+      'Flip two cards at a time to find matching pairs.',
+      'Match every pair before time runs out for your best time.',
+      'Tap a card to start; Space to restart after a win.',
+    ],
   },
   {
     slug: '2048',
@@ -99,6 +109,11 @@ export const games: Game[] = [
     addedAt: '2026-05-01',
     thumbnail: '/thumbnails/asteroids.svg',
     tags: ['space', 'shooter', 'physics'],
+    instructions: [
+      'Destroy asteroids before they collide with your ship.',
+      'Thrust and rotate with the on-screen controls or keyboard; fire to split rocks.',
+      'Tap or Space to start and shoot; P to pause.',
+    ],
   },
   {
     slug: 'solitaire',
@@ -110,6 +125,11 @@ export const games: Game[] = [
     addedAt: '2026-08-15',
     thumbnail: '/thumbnails/solitaire.svg',
     tags: ['cards', 'classic', 'tap'],
+    instructions: [
+      'Build four foundations from ace to king, one suit each.',
+      'Move tableau stacks in alternating colors and descending rank.',
+      'Tap or drag cards; double-click or double-tap to send to a foundation. Ctrl+Z undoes; Space starts a new deal.',
+    ],
   },
   {
     slug: 'minesweeper',
@@ -121,6 +141,11 @@ export const games: Game[] = [
     addedAt: '2026-09-28',
     thumbnail: '/thumbnails/minesweeper.svg',
     tags: ['mines', 'click', 'grid'],
+    instructions: [
+      'Reveal every safe square without hitting a mine.',
+      'Numbers show how many mines touch that cell.',
+      'Tap to reveal; right-click or long-press to flag. Space starts a new game.',
+    ],
   },
   {
     slug: 'tetris',

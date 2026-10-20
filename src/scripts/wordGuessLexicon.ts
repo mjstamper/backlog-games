@@ -1,4 +1,10 @@
-/** Curated list of common 5-letter words suitable as daily answers (~2,300 recommended). */
+import fiveLetterWords from 'virtual:five-letter-english-words';
+
+/**
+ * Curated common 5-letter words used as daily answers.
+ * Valid guesses are the five-letter slice of `an-array-of-english-words`
+ * (see vite/fiveLetterEnglishWords.mjs), plus any answer not already in that list.
+ */
 export const WORD_GUESS_ANSWERS: readonly string[] = [
   'about', 'alert', 'apple', 'beach', 'blade', 'blend', 'blind', 'block', 'board', 'brain',
   'brand', 'bread', 'break', 'brick', 'brief', 'bring', 'broad', 'brown', 'build', 'candy',
@@ -38,33 +44,8 @@ export const WORD_GUESS_ANSWERS: readonly string[] = [
   'worth', 'would', 'write', 'wrong', 'young', 'youth', 'zebra',
 ];
 
-/** Obscure or allowed words that are NOT in the target answers list. */
-const WORD_GUESS_EXTRA_GUESSES: readonly string[] = [
-  'aahed', 'aalii', 'aargh', 'abaca', 'abaci', 'aback', 'abacus', 'abaft', 'abaka', 'abamp',
-  'abase', 'abash', 'abate', 'abbey', 'abbot', 'abeam', 'abele', 'abets', 'abhor', 'abide',
-  'abies', 'abled', 'abler', 'abodes', 'abohm', 'abolish', 'abomb', 'abode', 'abort', 'abound',
-  'about', 'above', 'abuse', 'abuts', 'abyss', 'acari', 'acerb', 'acorn', 'acrid', 'actor',
-  'acute', 'adage', 'adams', 'adapt', 'addax', 'added', 'adder', 'addle', 'adept', 'adieu',
-  'adios', 'admit', 'adobe', 'adopt', 'adore', 'adorn', 'adult', 'aegis', 'aeons', 'aerie',
-  'affix', 'afire', 'afoot', 'afore', 'afoul', 'after', 'again', 'agape', 'agate', 'agave',
-  'agent', 'agile', 'aging', 'aglow', 'agony', 'agora', 'agree', 'ahead', 'ahold', 'aided',
-  'aider', 'aides', 'aimed', 'aimer', 'aioli', 'aired', 'airer', 'aisle', 'alarm', 'album',
-  'alder', 'alefs', 'alert', 'algae', 'algal', 'alibi', 'alien', 'align', 'alike', 'alive',
-  'alkyd', 'alkyl', 'allay', 'alley', 'allot', 'allow', 'alloy', 'aloes', 'aloft', 'aloha',
-  'alone', 'along', 'aloof', 'aloud', 'alpha', 'altar', 'alter', 'altos', 'alums', 'amass',
-  'amaze', 'amber', 'ambit', 'amble', 'ambos', 'amend', 'amide', 'amine', 'amino', 'amiss',
-  'amity', 'amnio', 'among', 'amour', 'ample', 'ampli', 'amply', 'amuse', 'anode', 'antic',
-  'anvil', 'aorta', 'apart', 'aphid', 'aping', 'apish', 'apnea', 'appal', 'apple', 'apply',
-  'apron', 'aptly', 'arbor', 'arcade', 'archer', 'ardor', 'arena', 'argon', 'argot', 'argue',
-  'arise', 'armor', 'aroma', 'arose', 'array', 'arrow', 'arson', 'artsy', 'ascot', 'ashen',
-  'aside', 'askew', 'aspen', 'assay', 'asset', 'atoll', 'atomic', 'atone', 'attic', 'audio',
-  'audit', 'augur', 'aunts', 'aura', 'autov', 'avail', 'avert', 'avian', 'avoid', 'await',
-  'awake', 'award', 'aware', 'awash', 'awful', 'awoke', 'axial', 'axiom', 'axion', 'azure',
-];
-
-const guessSet = new Set<string>();
+const guessSet = new Set<string>(fiveLetterWords);
 for (const word of WORD_GUESS_ANSWERS) guessSet.add(word);
-for (const word of WORD_GUESS_EXTRA_GUESSES) guessSet.add(word);
 
 export const WORD_GUESS_VALID_GUESSES: ReadonlySet<string> = guessSet;
 

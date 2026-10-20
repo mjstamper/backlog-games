@@ -105,7 +105,8 @@ Optional IPv6: add four `AAAA` records for `@` pointing to `2606:50c0:8000::153`
 | `src/components/` | UI components (`play/` holds game mounts) |
 | `src/scripts/` | Game logic (e.g. `snake.ts`) |
 | `src/scripts/lib/` | Shared helpers (scores, canvas, touch, D-pad) |
-| `docs/roadmap/` | Monthly goal checklists |
+| `docs/roadmap/` | Monthly goal checklists (through January 2027) |
+| `src/config/relatedGames.ts` | Related-game ranking for game detail pages |
 | `src/layouts/Layout.astro` | Shared HTML shell, nav, footer, SEO |
 | `public/` | Static assets, `CNAME`, `robots.txt` |
 | `.github/workflows/deploy.yml` | GitHub Pages CI/CD |

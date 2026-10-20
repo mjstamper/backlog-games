@@ -1,6 +1,8 @@
 /**
- * Monthly featured rotation (October roadmap).
+ * Monthly featured rotation (see docs/roadmap/).
  * When no game has `featured: true` in site.ts, the homepage uses this schedule.
+ * January: 2048 (same slug as December — polish landed in Dec 2026 roadmap).
+ * February: breakout (prep in docs/roadmap/january-2027.md).
  */
 export const featuredByMonth: Record<number, string> = {
   1: '2048',

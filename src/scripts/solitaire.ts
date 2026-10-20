@@ -1,3 +1,5 @@
+import { readStoredNumber, writeStoredNumber } from './lib/scores';
+
 type Suit = 'hearts' | 'diamonds' | 'clubs' | 'spades';
 
 type Card = {
@@ -411,7 +413,7 @@ export function initSolitaire(root: HTMLElement): () => void {
   movesEl.textContent = 'Moves: 0';
 
   const winsEl = document.createElement('span');
-  const savedWins = Number(localStorage.getItem(WINS_KEY) ?? 0);
+  const savedWins = readStoredNumber(WINS_KEY, 0);
   winsEl.textContent = `Wins: ${savedWins}`;
 
   const statusEl = document.createElement('span');
@@ -916,7 +918,7 @@ export function initSolitaire(root: HTMLElement): () => void {
     if (total === 52 && !won) {
       won = true;
       wins += 1;
-      localStorage.setItem(WINS_KEY, String(wins));
+      writeStoredNumber(WINS_KEY, wins);
       localStorage.removeItem(SAVE_KEY);
       statusEl.textContent = 'You win!';
       updateHud();

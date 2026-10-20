@@ -47,3 +47,7 @@ If editing 2048 or another canvas game anyway:
 ## Featured rotation
 
 December default in [`featured.ts`](../src/config/featured.ts): **2048**.
+
+## Next
+
+See [January 2027](./january-2027.md) — instructions backfill, related games, solitaire scores, keyboard lib rollout.
