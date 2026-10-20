@@ -1,5 +1,7 @@
+import { observeCanvasResize } from './lib/canvas';
 import { bindTouchInput } from './lib/touch';
-import { createVirtualDpad } from './lib/virtualDpad';
+import { createVirtualGameControls } from './lib/virtualDpad';
+import { readStoredNumber, saveHighScore } from './lib/scores';
 
 type Direction = 'up' | 'down' | 'left' | 'right';
 type GameState = 'ready' | 'playing' | 'gameover';
@@ -46,8 +48,8 @@ export function init2048(root: HTMLElement): () => void {
   scoreEl.textContent = 'Score: 0';
 
   const highScoreEl = document.createElement('span');
-  const savedHigh = Number(localStorage.getItem(HIGH_SCORE_KEY) ?? 0);
-  highScoreEl.textContent = `Best: ${savedHigh}`;
+  const savedHigh = readStoredNumber(HIGH_SCORE_KEY);
+  highScoreEl.textContent = savedHigh > 0 ? `Best: ${savedHigh}` : 'Best: --';
 
   const statusEl = document.createElement('span');
   statusEl.className = 'text-games-accent';
@@ -66,7 +68,7 @@ export function init2048(root: HTMLElement): () => void {
   const help = document.createElement('p');
   help.className = 'text-center text-xs text-games-ink-muted';
   help.textContent =
-    'Arrow keys, WASD, swipe, or D-pad to slide. Tap or Space to start or restart.';
+    'Arrow keys, WASD, swipe, or D-pad to slide. Tap, Space, or Restart to start or try again.';
 
   root.append(hud, canvas, controlsMount, help);
 
@@ -121,9 +123,8 @@ export function init2048(root: HTMLElement): () => void {
     score += points;
     scoreEl.textContent = `Score: ${score}`;
     if (score > highScore) {
-      highScore = score;
+      highScore = saveHighScore(HIGH_SCORE_KEY, score, highScore);
       highScoreEl.textContent = `Best: ${highScore}`;
-      localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
     }
   }
 
@@ -222,6 +223,12 @@ export function init2048(root: HTMLElement): () => void {
     else draw();
   }
 
+  /** Start from ready/gameover, then apply one slide (keyboard, swipe, D-pad). */
+  function applyDirection(direction: Direction) {
+    if (state === 'ready' || state === 'gameover') startOrRestart();
+    tryMove(direction);
+  }
+
   function drawRoundedRect(x: number, y: number, w: number, h: number, r: number) {
     const radius = Math.min(r, w / 2, h / 2);
     ctx.beginPath();
@@ -308,7 +315,7 @@ export function init2048(root: HTMLElement): () => void {
     const direction = directionFromKey(event.key);
     if (direction) {
       event.preventDefault();
-      tryMove(direction);
+      applyDirection(direction);
     }
   }
 
@@ -319,22 +326,28 @@ export function init2048(root: HTMLElement): () => void {
 
   const unbindTouch = bindTouchInput(canvas, {
     onSwipe(direction) {
-      tryMove(direction);
+      applyDirection(direction);
     },
     onTap() {
       if (state === 'ready' || state === 'gameover') startOrRestart();
     },
   });
 
-  const destroyDpad = createVirtualDpad(controlsMount, {
+  const destroyControls = createVirtualGameControls(controlsMount, {
     dpadMode: 'press',
     onDpad(direction) {
-      tryMove(direction);
+      applyDirection(direction);
     },
+    actions: [
+      {
+        label: 'Restart',
+        ariaLabel: 'Start a new game',
+        onPress: () => startOrRestart(),
+      },
+    ],
   });
 
-  const resizeObserver = new ResizeObserver(resizeCanvas);
-  resizeObserver.observe(root);
+  const unobserveResize = observeCanvasResize(root, resizeCanvas);
   window.addEventListener('keydown', onKeyDown);
 
   resetGame();
@@ -342,10 +355,10 @@ export function init2048(root: HTMLElement): () => void {
   resizeCanvas();
 
   return () => {
-    resizeObserver.disconnect();
+    unobserveResize();
     window.removeEventListener('keydown', onKeyDown);
     unbindTouch();
-    destroyDpad();
+    destroyControls();
     root.innerHTML = '';
   };
 }

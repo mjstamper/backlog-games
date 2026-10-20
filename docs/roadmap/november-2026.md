@@ -35,7 +35,7 @@ Refactor games to use shared helpers when touching a file — no big-bang rewrit
 
 ## Featured rotation
 
-November default in [`featured.ts`](../src/config/featured.ts): **word-guess**. Remove `featured: true` from catalog entries to use rotation (Minesweeper still overrides until cleared).
+November default in [`featured.ts`](../src/config/featured.ts): **word-guess**. Homepage featured title comes from rotation unless a catalog entry sets `featured: true` (manual override).
 
 ## How-to-play content
 

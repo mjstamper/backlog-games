@@ -1,3 +1,5 @@
+import { readStoredNumber, saveBestTime, formatElapsedTime } from './lib/scores';
+
 type GameState = 'ready' | 'playing' | 'won' | 'lost';
 
 type Cell = {
@@ -39,8 +41,8 @@ export function initMinesweeper(root: HTMLElement): () => void {
   timeEl.textContent = 'Time: 0:00';
 
   const bestEl = document.createElement('span');
-  let bestTime = Number(localStorage.getItem(BEST_TIME_KEY) ?? 0);
-  bestEl.textContent = bestTime > 0 ? `Best: ${formatTime(bestTime)}` : 'Best: --';
+  let bestTime = readStoredNumber(BEST_TIME_KEY);
+  bestEl.textContent = bestTime > 0 ? `Best: ${formatElapsedTime(bestTime)}` : 'Best: --';
 
   const statusEl = document.createElement('span');
   statusEl.className = 'w-full text-center text-games-accent sm:w-auto sm:text-right';
@@ -75,13 +77,6 @@ export function initMinesweeper(root: HTMLElement): () => void {
   let timerId: ReturnType<typeof setInterval> | null = null;
   let flagCount = 0;
 
-  function formatTime(ms: number): string {
-    const totalSec = Math.floor(ms / 1000);
-    const min = Math.floor(totalSec / 60);
-    const sec = totalSec % 60;
-    return `${min}:${sec.toString().padStart(2, '0')}`;
-  }
-
   function stopTimer() {
     if (timerId) {
       clearInterval(timerId);
@@ -94,14 +89,14 @@ export function initMinesweeper(root: HTMLElement): () => void {
     const start = Date.now() - elapsedMs;
     timerId = setInterval(() => {
       elapsedMs = Date.now() - start;
-      timeEl.textContent = `Time: ${formatTime(elapsedMs)}`;
+      timeEl.textContent = `Time: ${formatElapsedTime(elapsedMs)}`;
     }, 250);
   }
 
   function updateHud() {
     flagsEl.textContent = `Flags: ${Math.max(0, MINE_COUNT - flagCount)}`;
-    timeEl.textContent = `Time: ${formatTime(elapsedMs)}`;
-    bestEl.textContent = bestTime > 0 ? `Best: ${formatTime(bestTime)}` : 'Best: --';
+    timeEl.textContent = `Time: ${formatElapsedTime(elapsedMs)}`;
+    bestEl.textContent = bestTime > 0 ? `Best: ${formatElapsedTime(bestTime)}` : 'Best: --';
   }
 
   function inBounds(row: number, col: number): boolean {
@@ -201,10 +196,9 @@ export function initMinesweeper(root: HTMLElement): () => void {
       state = 'won';
       stopTimer();
       if (bestTime === 0 || elapsedMs < bestTime) {
-        bestTime = elapsedMs;
-        localStorage.setItem(BEST_TIME_KEY, String(bestTime));
+        bestTime = saveBestTime(BEST_TIME_KEY, elapsedMs, bestTime);
       }
-      statusEl.textContent = `Cleared in ${formatTime(elapsedMs)}! Space for new game`;
+      statusEl.textContent = `Cleared in ${formatElapsedTime(elapsedMs)}! Space for new game`;
       updateHud();
     }
 

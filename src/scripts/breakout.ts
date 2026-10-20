@@ -1,4 +1,5 @@
 import { bindPointerDrag } from './lib/touch';
+import { readStoredNumber, saveHighScore } from './lib/scores';
 
 type GameState = 'ready' | 'playing' | 'paused' | 'gameover';
 
@@ -59,7 +60,7 @@ export function initBreakout(root: HTMLElement): () => void {
   scoreEl.textContent = 'Score: 0';
 
   const highScoreEl = document.createElement('span');
-  const savedHigh = Number(localStorage.getItem(HIGH_SCORE_KEY) ?? 0);
+  const savedHigh = readStoredNumber(HIGH_SCORE_KEY);
   highScoreEl.textContent = `Best: ${savedHigh}`;
 
   const livesEl = document.createElement('span');
@@ -179,9 +180,8 @@ export function initBreakout(root: HTMLElement): () => void {
     score += points;
     scoreEl.textContent = `Score: ${score}`;
     if (score > highScore) {
-      highScore = score;
+      highScore = saveHighScore(HIGH_SCORE_KEY, score, highScore);
       highScoreEl.textContent = `Best: ${highScore}`;
-      localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
     }
   }
 

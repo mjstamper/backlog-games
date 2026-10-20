@@ -1,5 +1,6 @@
 import { bindTouchInput } from './lib/touch';
 import { createVirtualDpad } from './lib/virtualDpad';
+import { readStoredNumber, saveHighScore } from './lib/scores';
 
 type Point = { x: number; y: number };
 type Direction = Point;
@@ -32,7 +33,7 @@ export function initSnake(root: HTMLElement): () => void {
   scoreEl.textContent = 'Score: 0';
 
   const highScoreEl = document.createElement('span');
-  const savedHigh = Number(localStorage.getItem(HIGH_SCORE_KEY) ?? 0);
+  const savedHigh = readStoredNumber(HIGH_SCORE_KEY);
   highScoreEl.textContent = `Best: ${savedHigh}`;
 
   const statusEl = document.createElement('span');
@@ -169,9 +170,8 @@ export function initSnake(root: HTMLElement): () => void {
       score += 10;
       scoreEl.textContent = `Score: ${score}`;
       if (score > highScore) {
-        highScore = score;
+        highScore = saveHighScore(HIGH_SCORE_KEY, score, highScore);
         highScoreEl.textContent = `Best: ${highScore}`;
-        localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
       }
       placeFood();
     } else {

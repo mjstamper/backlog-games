@@ -1,4 +1,5 @@
 import { createVirtualGameControls } from './lib/virtualDpad';
+import { readStoredNumber, saveHighScore } from './lib/scores';
 
 type GameState = 'ready' | 'playing' | 'paused' | 'gameover';
 type PieceKind = 'I' | 'O' | 'T' | 'S' | 'Z' | 'J' | 'L';
@@ -268,7 +269,7 @@ export function initTetris(root: HTMLElement): () => void {
   linesEl.textContent = 'Lines: 0';
 
   const highScoreEl = document.createElement('span');
-  let highScore = Number(localStorage.getItem(HIGH_SCORE_KEY) ?? 0);
+  let highScore = readStoredNumber(HIGH_SCORE_KEY);
   highScoreEl.textContent = highScore > 0 ? `Best: ${highScore}` : 'Best: --';
 
   const statusEl = document.createElement('span');
@@ -429,8 +430,7 @@ export function initTetris(root: HTMLElement): () => void {
     levelEl.textContent = `Level: ${level}`;
 
     if (score > highScore) {
-      highScore = score;
-      localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
+      highScore = saveHighScore(HIGH_SCORE_KEY, score, highScore);
       highScoreEl.textContent = `Best: ${highScore}`;
     }
   }

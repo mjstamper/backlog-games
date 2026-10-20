@@ -1,3 +1,5 @@
+import { readStoredNumber, saveBestTime, formatElapsedTime } from './lib/scores';
+
 type GameState = 'ready' | 'playing' | 'won';
 
 const GRID_SIZE = 4;
@@ -22,8 +24,8 @@ export function initMemory(root: HTMLElement): () => void {
   timeEl.textContent = 'Time: 0:00';
 
   const bestEl = document.createElement('span');
-  const savedBest = Number(localStorage.getItem(BEST_TIME_KEY) ?? 0);
-  bestEl.textContent = savedBest > 0 ? `Best: ${formatTime(savedBest)}` : 'Best: --';
+  const savedBest = readStoredNumber(BEST_TIME_KEY);
+  bestEl.textContent = savedBest > 0 ? `Best: ${formatElapsedTime(savedBest)}` : 'Best: --';
 
   const statusEl = document.createElement('span');
   statusEl.className = 'w-full text-center text-games-accent sm:w-auto sm:text-right';
@@ -53,13 +55,6 @@ export function initMemory(root: HTMLElement): () => void {
   let timerId: ReturnType<typeof setInterval> | null = null;
   let flipBackTimer: ReturnType<typeof setTimeout> | null = null;
 
-  function formatTime(ms: number): string {
-    const totalSec = Math.floor(ms / 1000);
-    const min = Math.floor(totalSec / 60);
-    const sec = totalSec % 60;
-    return `${min}:${sec.toString().padStart(2, '0')}`;
-  }
-
   function shuffle<T>(items: T[]): T[] {
     const copy = [...items];
     for (let i = copy.length - 1; i > 0; i--) {
@@ -87,14 +82,14 @@ export function initMemory(root: HTMLElement): () => void {
     const start = Date.now() - elapsedMs;
     timerId = setInterval(() => {
       elapsedMs = Date.now() - start;
-      timeEl.textContent = `Time: ${formatTime(elapsedMs)}`;
+      timeEl.textContent = `Time: ${formatElapsedTime(elapsedMs)}`;
     }, 250);
   }
 
   function updateHud() {
     movesEl.textContent = `Moves: ${moves}`;
-    timeEl.textContent = `Time: ${formatTime(elapsedMs)}`;
-    bestEl.textContent = bestTime > 0 ? `Best: ${formatTime(bestTime)}` : 'Best: --';
+    timeEl.textContent = `Time: ${formatElapsedTime(elapsedMs)}`;
+    bestEl.textContent = bestTime > 0 ? `Best: ${formatElapsedTime(bestTime)}` : 'Best: --';
   }
 
   function renderBoard() {
@@ -145,8 +140,7 @@ export function initMemory(root: HTMLElement): () => void {
     stopTimer();
     state = 'won';
     if (bestTime === 0 || elapsedMs < bestTime) {
-      bestTime = elapsedMs;
-      localStorage.setItem(BEST_TIME_KEY, String(bestTime));
+      bestTime = saveBestTime(BEST_TIME_KEY, elapsedMs, bestTime);
     }
     statusEl.textContent = `You win in ${moves} moves! Space to replay`;
     updateHud();
