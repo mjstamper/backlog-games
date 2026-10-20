@@ -14,6 +14,8 @@ export type Game = {
   addedAt?: string;
   thumbnail: string;
   tags: string[];
+  /** Shown in the How to play panel on the game page. */
+  instructions?: string[];
 };
 
 export const categories: { id: GameCategory; label: string }[] = [
@@ -43,6 +45,11 @@ export const games: Game[] = [
     addedAt: '2026-01-15',
     thumbnail: '/thumbnails/snake.svg',
     tags: ['classic', 'keyboard', 'high-score'],
+    instructions: [
+      'Eat apples to grow; avoid hitting your tail or the walls.',
+      'Arrow keys, WASD, swipe, or the on-screen D-pad to turn.',
+      'Space to start; P to pause.',
+    ],
   },
   {
     slug: 'breakout',
@@ -123,6 +130,27 @@ export const games: Game[] = [
     addedAt: '2026-10-01',
     thumbnail: '/thumbnails/tetris.svg',
     tags: ['tetris', 'blocks', 'grid'],
+    instructions: [
+      'Stack falling blocks to fill horizontal lines.',
+      'Arrow keys move and rotate; Space hard-drops.',
+      'Clear lines to score and level up; game ends if the stack reaches the top.',
+    ],
+  },
+  {
+    slug: 'word-guess',
+    title: 'Word Guess',
+    description:
+      'Guess the five-letter word in six tries. Green means correct letter and spot.',
+    category: 'casual',
+    status: 'playable',
+    addedAt: '2026-11-01',
+    thumbnail: '/thumbnails/word-guess.svg',
+    tags: ['word', 'daily', 'puzzle'],
+    instructions: [
+      'Each guess must be a valid five-letter word.',
+      'Tile colors show letters that are correct, present elsewhere, or absent.',
+      'Share your result grid without spoilers after you win or lose.',
+    ],
   },
 ];
 

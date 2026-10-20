@@ -7,6 +7,7 @@ import SnakeGame from '../components/play/SnakeGame.astro';
 import SolitaireGame from '../components/play/SolitaireGame.astro';
 import MinesweeperGame from '../components/play/MinesweeperGame.astro';
 import TetrisGame from '../components/play/TetrisGame.astro';
+import WordGuessGame from '../components/play/WordGuessGame.astro';
 
 export const gameRegistry: Record<string, AstroComponentFactory> = {
     snake: SnakeGame,
@@ -17,4 +18,5 @@ export const gameRegistry: Record<string, AstroComponentFactory> = {
     solitaire: SolitaireGame,
     minesweeper: MinesweeperGame,
     tetris: TetrisGame,
+    'word-guess': WordGuessGame,
 };

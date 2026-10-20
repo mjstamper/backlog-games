@@ -18,6 +18,7 @@ The catalog lives in [src/config/site.ts](src/config/site.ts). Each entry is a `
 | Solitaire | Casual | Playable |
 | Minesweeper | Casual | Playable |
 | Tetris | Casual | Playable |
+| Word Guess | Casual | Playable |
 
 ### Adding a game
 
@@ -103,6 +104,8 @@ Optional IPv6: add four `AAAA` records for `@` pointing to `2606:50c0:8000::153`
 | `src/pages/` | Routes (`/` catalog, `/<slug>` per-game pages) |
 | `src/components/` | UI components (`play/` holds game mounts) |
 | `src/scripts/` | Game logic (e.g. `snake.ts`) |
+| `src/scripts/lib/` | Shared helpers (scores, canvas, touch, D-pad) |
+| `docs/roadmap/` | Monthly goal checklists |
 | `src/layouts/Layout.astro` | Shared HTML shell, nav, footer, SEO |
 | `public/` | Static assets, `CNAME`, `robots.txt` |
 | `.github/workflows/deploy.yml` | GitHub Pages CI/CD |

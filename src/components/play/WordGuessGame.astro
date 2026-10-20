@@ -1,0 +1,12 @@
+<div id="word-guess-mount" class="w-full"></div>
+
+<script>
+  import { initWordGuess } from '../../scripts/wordGuess';
+
+  const mount = document.getElementById('word-guess-mount');
+  if (!mount) throw new Error('Word Guess mount element not found');
+
+  const destroy = initWordGuess(mount);
+
+  document.addEventListener('astro:before-swap', destroy, { once: true });
+</script>

@@ -13,7 +13,7 @@ export const featuredByMonth: Record<number, string> = {
   8: 'snake',
   9: 'minesweeper',
   10: 'tetris',
-  11: 'minesweeper',
+  11: 'word-guess',
   12: '2048',
 };
 

@@ -42,6 +42,21 @@ const { game } = Astro.props;
     </div>
   </div>
 
+  {
+    game.instructions && game.instructions.length > 0 && (
+      <details class="mt-4 rounded-xl border border-games-border bg-games-surface px-4 py-3">
+        <summary class="cursor-pointer text-sm font-semibold text-games-ink">
+          How to play
+        </summary>
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-games-ink-muted">
+          {game.instructions.map((line) => (
+            <li>{line}</li>
+          ))}
+        </ul>
+      </details>
+    )
+  }
+
   <div class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
     <div>
       <h1 class="text-2xl font-bold tracking-tight text-games-ink">
